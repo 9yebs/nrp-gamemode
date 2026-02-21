@@ -1,0 +1,29 @@
+name: Compile Pawn
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Pawn Compiler
+        run: |
+          sudo apt update
+          sudo apt install -y unzip wget
+          wget https://github.com/compuphase/pawn/releases/download/v3.10.10/pawn-3.10.10-linux.zip
+          unzip pawn-3.10.10-linux.zip
+
+      - name: Compile Gamemode
+        run: |
+          ./pawncc vrp.pwn
+
+      - name: Upload AMX
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-amx
+          path: vrp.amx
